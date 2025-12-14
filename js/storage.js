@@ -3,6 +3,27 @@ import { state, mutations } from './state.js';
 const STORAGE_KEY_STATE = 'pomodoro-state';
 const STORAGE_KEY_SESSIONS = 'pomodoro-sessions';
 
+// Safe Storage Wrapper
+const safeStorage = {
+    getItem: (key) => {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            console.warn('LocalStorage access denied, using memory fallback');
+            return safeStorage.memory[key] || null;
+        }
+    },
+    setItem: (key, value) => {
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            console.warn('LocalStorage access denied, using memory fallback');
+            safeStorage.memory[key] = value;
+        }
+    },
+    memory: {}
+};
+
 export const storage = {
     saveState: () => {
         const stateToSave = {
@@ -11,11 +32,11 @@ export const storage = {
             pomodoroCount: state.pomodoroCount,
             theme: state.theme
         };
-        localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(stateToSave));
+        safeStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(stateToSave));
     },
 
     loadState: () => {
-        const savedState = localStorage.getItem(STORAGE_KEY_STATE);
+        const savedState = safeStorage.getItem(STORAGE_KEY_STATE);
         if (savedState) {
             try {
                 const parsedState = JSON.parse(savedState);
@@ -36,11 +57,11 @@ export const storage = {
         // session: { type: 'work', duration: 25, date: ISOString }
         const sessions = storage.loadSessions();
         sessions.push(session);
-        localStorage.setItem(STORAGE_KEY_SESSIONS, JSON.stringify(sessions));
+        safeStorage.setItem(STORAGE_KEY_SESSIONS, JSON.stringify(sessions));
     },
 
     loadSessions: () => {
-        const savedSessions = localStorage.getItem(STORAGE_KEY_SESSIONS);
+        const savedSessions = safeStorage.getItem(STORAGE_KEY_SESSIONS);
         if (savedSessions) {
             try {
                 return JSON.parse(savedSessions);
