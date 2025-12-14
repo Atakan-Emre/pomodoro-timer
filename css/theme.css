@@ -1,0 +1,38 @@
+:root {
+    /* Base HSL values for easy manipulation */
+    --hue-primary: 250;
+    --hue-secondary: 160;
+
+    /* Light Theme (Default) */
+    --bg-body: hsl(220, 20%, 97%);
+    --bg-surface: hsl(0, 0%, 100%);
+    --text-main: hsl(220, 20%, 20%);
+    --text-muted: hsl(220, 10%, 50%);
+
+    --primary: hsl(var(--hue-primary), 70%, 60%);
+    --primary-hover: hsl(var(--hue-primary), 70%, 50%);
+    --secondary: hsl(var(--hue-secondary), 60%, 50%);
+
+    --surface-100: hsl(220, 20%, 95%);
+    --surface-200: hsl(220, 20%, 90%);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --bg-body: hsl(222, 47%, 11%);
+    --bg-surface: hsl(217, 33%, 17%);
+    --text-main: hsl(210, 40%, 98%);
+    --text-muted: hsl(215, 20%, 65%);
+
+    --primary: hsl(var(--hue-primary), 80%, 70%);
+    --primary-hover: hsl(var(--hue-primary), 80%, 60%);
+    --secondary: hsl(var(--hue-secondary), 70%, 60%);
+
+    --surface-100: hsl(217, 33%, 25%);
+    --surface-200: hsl(217, 33%, 30%);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+}

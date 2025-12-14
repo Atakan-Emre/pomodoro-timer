@@ -1,0 +1,40 @@
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 900px;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 3rem;
+    }
+
+    .main-header,
+    .timer-section {
+        flex: 1;
+    }
+
+    /* Reorganize for Desktop */
+    .app-container {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        grid-template-areas:
+            "timer header"
+            "timer stats";
+        gap: 3rem;
+    }
+
+    .main-header {
+        grid-area: header;
+        align-items: flex-start;
+        justify-content: flex-end;
+    }
+
+    .timer-section {
+        grid-area: timer;
+    }
+
+    .stats-panel {
+        grid-area: stats;
+        display: flex;
+        flex-direction: column;
+        border-top: none;
+    }
+}
