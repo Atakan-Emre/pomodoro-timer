@@ -46,7 +46,7 @@ export const ui = {
     },
 
     updateStartPauseButton: (isRunning) => {
-        elements.startPauseBtn.textContent = isRunning ? 'Pause' : 'Start';
+        elements.startPauseBtn.textContent = isRunning ? 'Duraklat' : 'Başlat';
         elements.startPauseBtn.classList.toggle('active', isRunning);
     },
 
@@ -61,8 +61,8 @@ export const ui = {
 
         const h = Math.floor(totalMinutes / 60);
         const m = totalMinutes % 60;
-        let timeString = `${m}m`;
-        if (h > 0) timeString = `${h}h ${m}m`;
+        let timeString = `${m}dk`;
+        if (h > 0) timeString = `${h}sa ${m}dk`;
 
         elements.totalTime.textContent = timeString;
     },

@@ -97,7 +97,7 @@ export const timer = {
         // Update Stats
         ui.updateStats(storage.getTodaySessionsCount(), storage.getTotalWorkTime());
 
-        alert("Timer Finished!"); // Simple alert for now
+        alert("Süre Doldu!"); // Simple alert for now
     },
 
     switchMode: (mode) => {
