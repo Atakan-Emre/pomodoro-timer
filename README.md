@@ -28,4 +28,4 @@ A clean, modern, and persistent Pomodoro Timer application built with Vanilla Ja
 - After 4 Work sessions -> **Long Break (15 min)**
 
 ## Live Demo
-[View Live Demo](#) *(Add your GitHub Pages link here)*
+[View Live Demo](https://atakan-emre.github.io/pomodoro-timer/)
