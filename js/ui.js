@@ -9,7 +9,14 @@ const elements = {
     themeToggleBtn: document.getElementById('theme-toggle'),
     todayCount: document.getElementById('today-count'),
     totalTime: document.getElementById('total-time'),
-    html: document.documentElement
+    html: document.documentElement,
+    cycleSteps: document.querySelector('.cycle-steps'),
+    cycleText: document.querySelector('.cycle-text'),
+    modal: document.getElementById('notification-modal'),
+    modalTitle: document.getElementById('modal-title'),
+    modalMessage: document.getElementById('modal-message'),
+    modalStartBtn: document.getElementById('modal-start-btn'),
+    modalCloseBtn: document.getElementById('modal-close-btn')
 };
 
 const CIRCLE_RADIUS = 140;
@@ -19,6 +26,42 @@ export const ui = {
     init: () => {
         elements.progressRingCircle.style.strokeDasharray = `${CIRCLE_CIRCUMFERENCE} ${CIRCLE_CIRCUMFERENCE}`;
         elements.progressRingCircle.style.strokeDashoffset = CIRCLE_CIRCUMFERENCE;
+    },
+
+    updateCycle: (pomodoroCount, currentMode) => {
+        elements.cycleSteps.innerHTML = '';
+        const cycleProgress = pomodoroCount % 4; // 0, 1, 2, 3 completed
+
+        for (let i = 0; i < 4; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('cycle-dot');
+
+            // Completed dots
+            if (i < cycleProgress) {
+                dot.classList.add('completed');
+            }
+            // Active dot (only if we are in 'work' mode and this is the current one)
+            else if (i === cycleProgress && currentMode === 'work') {
+                dot.classList.add('active');
+            }
+
+            elements.cycleSteps.appendChild(dot);
+        }
+
+        elements.cycleText.textContent = `${cycleProgress + 1} / 4`;
+    },
+
+    showModal: (title, message, onStart) => {
+        elements.modalTitle.textContent = title;
+        elements.modalMessage.textContent = message;
+        elements.modal.classList.remove('hidden');
+
+        // Remove old listeners to avoid duplicates (naive approach, better to handle in app.js but ui.js control is handy here)
+        // Ideally UI just shows/hides, Controller handles events. Let's expose elements.
+    },
+
+    hideModal: () => {
+        elements.modal.classList.add('hidden');
     },
 
     updateTimerDisplay: (seconds) => {

@@ -50,6 +50,16 @@
             </div>
         </main>
 
+        <div class="cycle-container">
+            <div class="cycle-header">
+                <span class="cycle-label">Hedef</span>
+                <p class="cycle-text">1/4</p>
+            </div>
+            <div class="cycle-steps">
+                <!-- Dots/Bars will be injected by JS -->
+            </div>
+        </div>
+
         <section class="stats-panel">
             <div class="stat-card">
                 <h3>Bugünkü Oturumlar</h3>
@@ -62,12 +72,20 @@
         </section>
     </div>
 
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Süre Doldu!</h2>
+            <p id="modal-message">Çalışma süresi bitti. Kısa bir molaya ne dersin?</p>
+            <div class="modal-actions">
+                <button id="modal-start-btn" class="btn-primary">Molayı Başlat</button>
+                <button id="modal-close-btn" class="btn-secondary">Kapat</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="js/state.js"></script>
-    <script src="js/storage.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/timer.js"></script>
-    <script src="js/app.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 
 </html>

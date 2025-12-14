@@ -10,9 +10,43 @@ const MODES = {
     longBreak: 15 * 60
 };
 
+// Audio Context Singleton
+let audioCtx = null;
+
+const playNotification = () => {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // transform to async/resume pattern if needed, but for now just create/resume
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+    oscillator.start();
+    setTimeout(() => oscillator.stop(), 500);
+};
+
 export const timer = {
     start: () => {
         if (state.isRunning) return;
+
+        // Initialize/Resume audio context on user interaction (Start button)
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } else if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
 
         mutations.setIsRunning(true);
         ui.updateStartPauseButton(true);
@@ -49,23 +83,19 @@ export const timer = {
         const totalTime = MODES[currentMode];
         ui.updateTimerDisplay(state.remainingTime);
         ui.updateProgressRing(state.remainingTime, totalTime);
+        ui.updateCycle(state.pomodoroCount, currentMode); // Update cycle dots
         if (state.remainingTime % 5 === 0) storage.saveState(); // Auto-save every 5 seconds
     },
 
     complete: () => {
         timer.pause();
 
-        // Play notification sound (Base64 Beep)
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        oscillator.start();
-        setTimeout(() => oscillator.stop(), 500);
+        // Play notification sound
+        try {
+            playNotification();
+        } catch (e) {
+            console.error("Audio play failed", e);
+        }
 
         // Visual Queue
         const timerDisplay = document.querySelector('.timer-display');
@@ -73,6 +103,10 @@ export const timer = {
         setTimeout(() => timerDisplay.classList.remove('shake'), 2000);
 
         const completedMode = getters.getMode();
+        let nextMode = '';
+        let modalTitle = 'Süre Doldu!';
+        let modalMessage = '';
+        let btnText = '';
 
         if (completedMode === 'work') {
             const newCount = state.pomodoroCount + 1;
@@ -84,20 +118,40 @@ export const timer = {
                 date: new Date().toISOString()
             });
 
-            // Auto switch mode
+            // Determine next mode
             if (newCount % 4 === 0) {
-                timer.switchMode('longBreak');
+                nextMode = 'longBreak';
+                modalMessage = 'Harika! 4 Pomodoro tamamladın. Uzun bir molayı hak ettin.';
+                btnText = 'Uzun Molayı Başlat';
             } else {
-                timer.switchMode('shortBreak');
+                nextMode = 'shortBreak';
+                modalMessage = 'Çalışma bitti. Kısa bir mola verelim mi?';
+                btnText = 'Kısa Molayı Başlat';
             }
         } else {
-            timer.switchMode('work');
+            // Break is over
+            nextMode = 'work';
+            modalMessage = 'Mola bitti! Yeni bir çalışma oturumuna hazır mısın?';
+            btnText = 'Çalışmaya Başla';
         }
 
-        // Update Stats
+        // Update Stats immediately
         ui.updateStats(storage.getTodaySessionsCount(), storage.getTotalWorkTime());
+        ui.updateCycle(state.pomodoroCount, completedMode);
 
-        alert("Süre Doldu!"); // Simple alert for now
+        // Show Modal for manual transition
+        const modal = ui.getElements().modal;
+        const modalStartBtn = ui.getElements().modalStartBtn;
+
+        ui.showModal(modalTitle, modalMessage);
+        modalStartBtn.textContent = btnText;
+
+        // One-time listener for the modal action
+        modalStartBtn.onclick = () => {
+            timer.switchMode(nextMode);
+            timer.start();
+            ui.hideModal();
+        };
     },
 
     switchMode: (mode) => {

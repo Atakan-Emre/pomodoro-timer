@@ -1,40 +1,88 @@
-@media (min-width: 768px) {
+@media (min-width: 900px) {
     .app-container {
-        max-width: 900px;
-        flex-direction: row;
-        align-items: flex-start;
-        padding: 3rem;
-    }
+        max-width: 1000px;
+        padding: 4rem;
+        gap: 4rem;
 
-    .main-header,
-    .timer-section {
-        flex: 1;
-    }
-
-    /* Reorganize for Desktop */
-    .app-container {
         display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
         grid-template-areas:
             "timer header"
-            "timer stats";
-        gap: 3rem;
+            "timer content";
+        align-items: center;
     }
 
     .main-header {
         grid-area: header;
-        align-items: flex-start;
+        justify-content: flex-end;
+        align-self: start;
+        margin-bottom: 0;
+    }
+
+    .timer-section {
+        grid-area: timer;
+        border-right: 1px solid var(--surface-200);
+        padding-right: 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+
+    /* Group Stats and Cycle into a 'content' wrapper implicitly by grid area or add wrapper in HTML if needed.
+       For now, let's use the grid areas effectively. 
+       Actually, `stats-panel` and `cycle-container` are siblings.
+       To make "Right Side" = Header + Cycle + Stats, we need a wrapper or smart grid.
+    */
+
+    /* 
+       Let's adjust:
+       Left: Timer Section
+       Right: Header (Top), Cycle + Stats (Center/Bottom)
+    */
+}
+
+/* Better Responsive Approach without changing HTML structure too much */
+@media (min-width: 900px) {
+    .app-container {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        grid-template-areas:
+            "timer header"
+            "timer cycle"
+            "timer stats";
+        column-gap: 4rem;
+        row-gap: 2rem;
+        padding: 4rem;
+        align-content: center;
+    }
+
+    .main-header {
+        grid-area: header;
         justify-content: flex-end;
     }
 
     .timer-section {
         grid-area: timer;
+        border-right: 1px solid var(--surface-200);
+        padding-right: 4rem;
+    }
+
+    .cycle-container {
+        grid-area: cycle;
+        align-self: end;
+        align-items: flex-start;
+        /* Align left on desktop */
     }
 
     .stats-panel {
         grid-area: stats;
-        display: flex;
-        flex-direction: column;
+        align-self: start;
         border-top: none;
+        padding-top: 0;
+        grid-template-columns: 1fr;
+        /* Stack cards on right side? Or keep 2x1? Let's keep 2x1 but maybe vertical if space is tight */
+        gap: 1.5rem;
     }
 }

@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.updateTheme(state.theme);
     }
 
+    // Initial Cycle UI Update
+    ui.updateCycle(state.pomodoroCount, state.mode);
+
     // Load Stats
     ui.updateStats(storage.getTodaySessionsCount(), storage.getTotalWorkTime());
 
@@ -43,6 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     elements.resetBtn.addEventListener('click', () => {
         timer.reset();
+        // Resetting logic might need to clear cycle count if user wants full reset?
+        // For now timer.reset() just resets the CURRENT timer.
+    });
+
+    // Modal Close
+    elements.modalCloseBtn.addEventListener('click', () => {
+        ui.hideModal();
     });
 
     elements.modeButtons.forEach(btn => {

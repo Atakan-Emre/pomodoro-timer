@@ -48,32 +48,38 @@ body {
 .mode-selector {
     display: flex;
     background-color: var(--surface-100);
-    padding: 0.25rem;
-    border-radius: 2rem;
+    padding: 0.35rem;
+    border-radius: 1rem;
     margin-bottom: 2rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .mode-btn {
     flex: 1;
-    padding: 0.5rem 1rem;
-    border-radius: 1.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    font-size: 0.95rem;
     color: var(--text-muted);
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mode-btn:hover {
+    color: var(--text-main);
 }
 
 .mode-btn.active {
-    background-color: var(--primary);
-    color: #fff;
-    /* Always white on active primary */
+    background-color: var(--bg-surface);
+    color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
 }
 
 .timer-display {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2.5rem;
 }
 
 .progress-ring-container {
@@ -105,25 +111,37 @@ body {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    margin-bottom: 1rem;
 }
 
 .btn-primary,
 .btn-secondary {
-    padding: 0.8rem 2rem;
-    border-radius: 0.75rem;
+    padding: 1rem 2.5rem;
+    border-radius: 1rem;
     font-weight: 600;
     font-size: 1.1rem;
-    transition: transform 0.1s;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
 }
 
 .btn-primary {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white;
     flex: 2;
+    box-shadow: 0 4px 12px rgba(var(--hue-primary), 70%, 60%, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--hue-primary), 70%, 60%, 0.4);
 }
 
 .btn-primary:active {
-    transform: scale(0.98);
+    transform: translateY(1px);
 }
 
 .btn-secondary {
@@ -132,27 +150,44 @@ body {
     flex: 1;
 }
 
+.btn-secondary:hover {
+    background-color: var(--surface-200);
+    color: var(--text-main);
+}
+
 .stats-panel {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding-top: 1rem;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
     border-top: 1px solid var(--surface-200);
 }
 
 .stat-card {
-    background-color: var(--surface-100);
-    padding: 1rem;
-    border-radius: 1rem;
+    background: linear-gradient(145deg, var(--surface-100) 0%, var(--surface-200) 100%);
+    padding: 1.5rem;
+    border-radius: 1.25rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .stat-card h3 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     color: var(--text-muted);
     margin-bottom: 0.5rem;
+    opacity: 0.8;
 }
 
 .stat-card p {
@@ -206,7 +241,124 @@ body {
     }
 }
 
-.timer-display.shake {
-    animation: shake 0.5s;
-    animation-iteration-count: infinite;
+
+/* Cycle Indicator (Redesigned) */
+.cycle-container {
+    background-color: var(--surface-100);
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    grid-area: cycle;
+    box-shadow: var(--shadow-sm);
+}
+
+.cycle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.cycle-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.cycle-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.cycle-steps {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    height: 8px;
+    /* Fixed height for the bar */
+}
+
+.cycle-dot {
+    flex: 1;
+    /* Stretch to fill space equally */
+    height: 100%;
+    border-radius: 4px;
+    background-color: var(--surface-200);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.cycle-dot.completed {
+    background-color: var(--primary);
+}
+
+.cycle-dot.active {
+    background-color: var(--primary);
+    opacity: 0.5;
+}
+
+/* Optional: Add a subtle striped animation for the active state if we want to get fancy later */
+
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background-color: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-md);
+    max-width: 90%;
+    width: 400px;
+    text-align: center;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.hidden .modal-content {
+    transform: translateY(20px);
+}
+
+.modal-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.modal-content p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
 }
